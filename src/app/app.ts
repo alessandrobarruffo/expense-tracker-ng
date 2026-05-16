@@ -1,5 +1,8 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { environment } from '../environments/environment.development';
+import { LoginService } from './services/login.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +11,16 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('expense-tracker-ng');
+
+  private router = inject(Router);
+
+  private loginService = inject(LoginService);
+  constructor() {
+    if (this.loginService.isLoggedIn()) {
+      //this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/login']);
+    }
+
+  }
 }

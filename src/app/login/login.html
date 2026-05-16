@@ -1,0 +1,10 @@
+<form>
+    <label for="username">Username</label>
+    <input type="text" id="username" [formField]="loginForm.username">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" [formField]="loginForm.password">
+
+    <button type="button" (click)="login()">Login</button>
+    <button type="button" (click)="register()">Register</button>
+</form>
