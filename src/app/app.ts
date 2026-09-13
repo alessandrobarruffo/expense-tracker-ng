@@ -8,10 +8,9 @@ import { LoginService } from './services/login.service';
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
-
   private router = inject(Router);
 
   private loginService = inject(LoginService);
@@ -21,6 +20,5 @@ export class App {
     } else {
       this.router.navigate(['/login']);
     }
-
   }
 }
