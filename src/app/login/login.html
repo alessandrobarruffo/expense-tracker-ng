@@ -1,10 +1,49 @@
-<form>
-    <label for="username">Username</label>
-    <input type="text" id="username" [formField]="loginForm.username">
+<div class="flex align-items-center justify-content-center p-4">
+  <form class="flex flex-column w-6 gap-4">
+    <div class="flex flex-column gap-3">
+      <div class="flex flex-column gap-1">
+        <label for="username">Username</label>
+        <input
+          pInputText
+          type="text"
+          id="username"
+          variant="filled"
+          [formField]="loginForm.username"
+          placeholder="Insert your username"
+        />
+      </div>
+      <div class="flex flex-column gap-1">
+        <label for="password">Password</label>
+        <input
+          pInputText
+          type="password"
+          id="password"
+          variant="filled"
+          [formField]="loginForm.password"
+          placeholder="Insert your password"
+        />
+      </div>
+    </div>
 
-    <label for="password">Password</label>
-    <input type="password" id="password" [formField]="loginForm.password">
+    @if (error()) {
+      <p-message severity="error">
+        {{error()?.message}}. @if(error()?.requestId) {RequestId: {{error()?.requestId}}}
+      </p-message>
+    }
 
-    <button type="button" (click)="login()">Login</button>
-    <button type="button" (click)="register()">Register</button>
-</form>
+    <div class="flex alig-items-center justify-content-center gap-3">
+      <p-button
+        [disabled]="loginForm().invalid()"
+        type="button"
+        label="Login"
+        (click)="login()"
+      ></p-button>
+      <p-button
+        [disabled]="loginForm().invalid()"
+        type="button"
+        label="Register"
+        (click)="register()"
+      ></p-button>
+    </div>
+  </form>
+</div>

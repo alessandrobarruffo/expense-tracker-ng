@@ -7,14 +7,13 @@ import { LoginPayload } from '../model/login-model';
   providedIn: 'root',
 })
 export class ApiService {
-
-  registerUrl = environment.apiUrl + '/user/register';
-  loginUrl = environment.apiUrl + '/user/authenticate';
+  registerUrl =  '/api/user/register';
+  loginUrl =  '/api/user/authenticate';
 
   private http = inject(HttpClient);
 
   register(payload: LoginPayload) {
-    return this.http.post(this.registerUrl, payload);
+    return this.http.post(this.registerUrl, payload, { withCredentials: true});
   }
 
   login(payload: LoginPayload) {
