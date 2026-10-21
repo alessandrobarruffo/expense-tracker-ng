@@ -9,12 +9,12 @@ import { ErrorResponse } from '../model/error-model';
 
 const MOCK_FILLED_PAYLOAD: LoginPayload = {
   username: 'user',
-  password: 'password'
+  password: 'password',
 };
 
 const MOCK_EMPTY_PAYLOAD: LoginPayload = {
   username: '',
-  password: ''
+  password: '',
 };
 
 describe.only('Login', () => {
@@ -28,7 +28,7 @@ describe.only('Login', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Login],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Login);
@@ -66,20 +66,25 @@ describe.only('Login', () => {
     expect(register).toHaveBeenCalledOnce();
   });
 
-  it('should show error message',() => {
-
+  it('should show error message', () => {
     fixture.componentInstance.loginModel.set(MOCK_FILLED_PAYLOAD);
     fixture.detectChanges();
     expect(fixture.componentInstance.error()).toBeFalsy();
-    const register = vi.spyOn(component,'register');
+    const register = vi.spyOn(component, 'register');
     formButtons()[1].nativeElement.click();
     const req = httpMock.expectOne('/api/user/register');
-    req.flush({code: 'ERR_500_GENERIC', requestId: '123', message: 'error', timestamp: '122'} as ErrorResponse, { status: 500, statusText: 'ERROR' });
+    req.flush(
+      {
+        code: 'ERR_500_GENERIC',
+        requestId: '123',
+        message: 'error',
+        timestamp: '122',
+      } as ErrorResponse,
+      { status: 500, statusText: 'ERROR' },
+    );
     expect(register).toHaveBeenCalledOnce();
     fixture.whenStable();
     fixture.detectChanges();
     expect(fixture.componentInstance.error()).toBeTruthy();
-
-  })
-
+  });
 });

@@ -1,30 +1,22 @@
-import {
-  Component,
-  DestroyRef,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
 import { LoginPayload } from '../model/login-model';
-import { LoginService } from '../services/login.service';
+import { AuthenticationService } from '../services/authentication.service';
 import { catchError, EMPTY, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Button } from '@openng/optimus-ui/button';
 import { InputTextModule } from '@openng/optimus-ui/inputtext';
 import { MessageModule } from '@openng/optimus-ui/message';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorResponse } from '../model/error-model';
-
 
 @Component({
   selector: 'app-login',
   imports: [FormField, Button, InputTextModule, MessageModule],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss',
 })
 export class Login {
-
   loginModel = signal<LoginPayload>({
     username: '',
     password: '',
@@ -37,7 +29,7 @@ export class Login {
 
   destroyRef = inject(DestroyRef);
   private router = inject(Router);
-  private loginService = inject(LoginService);
+  private loginService = inject(AuthenticationService);
 
   constructor() {}
 
@@ -47,14 +39,16 @@ export class Login {
       .register(this.loginForm().value())
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap((res) => {
-          console.log(res);
+        tap(() => {
+          if (this.loginService.isLoggedIn()) {
+            this.router.navigate(['/home/expenses']);
+          }
         }),
         catchError((error: ErrorResponse) => {
-            console.error(error);
-            this.error.set(error);
-            return EMPTY;
-        })
+          console.error(error);
+          this.error.set(error);
+          return EMPTY;
+        }),
       )
       .subscribe();
   }
@@ -65,7 +59,7 @@ export class Login {
       .login(this.loginForm().value())
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap((response) => {
+        tap(() => {
           if (this.loginService.isLoggedIn()) {
             this.router.navigate(['/home']);
           }
@@ -73,7 +67,7 @@ export class Login {
         catchError((error: ErrorResponse) => {
           this.error.set(error);
           return EMPTY;
-        })
+        }),
       )
       .subscribe();
   }

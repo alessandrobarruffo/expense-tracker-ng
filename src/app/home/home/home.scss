@@ -1,0 +1,21 @@
+.home-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  .sidenav {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    &.opened {
+      min-width: 50vw;
+    }
+    box-shadow: -2px 1px 7px 0px var(--p-green-50);
+  }
+
+  .content {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+}

@@ -27,7 +27,10 @@
 
     @if (error()) {
       <p-message severity="error">
-        {{error()?.message}}. @if(error()?.requestId) {RequestId: {{error()?.requestId}}}
+        {{ error()?.message }}.
+        @if (error()?.requestId) {
+          RequestId: {{ error()?.requestId }}
+        }
       </p-message>
     }
 

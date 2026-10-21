@@ -1,1 +1,21 @@
-<p>home works!</p>
+<div class="home-container">
+  <div class="sidenav align-items-center h-full px-2 py-3">
+    <div class="flex flex-column flex-grow-1 min-h-0">
+      <span class="text-green-300">Expense Tracker</span>
+    </div>
+    <div class="flex-none">
+      <p-button type="button" label="Logout" (click)="logout()"></p-button>
+    </div>
+  </div>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<!--
+
+<div class="flex flex-column">
+  @for (expense of expenses(); track expense.id) {
+    {{expense.price}}
+  }
+</div>
+-->
