@@ -2,17 +2,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Login } from './login';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { LoginPayload } from '../model/login-model';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ErrorResponse } from '../model/error-model';
+import { AuthPayload } from '../core/auth/auth.models';
 
-const MOCK_FILLED_PAYLOAD: LoginPayload = {
+const MOCK_FILLED_PAYLOAD: AuthPayload = {
   username: 'user',
   password: 'password',
 };
 
-const MOCK_EMPTY_PAYLOAD: LoginPayload = {
+const MOCK_EMPTY_PAYLOAD: AuthPayload = {
   username: '',
   password: '',
 };

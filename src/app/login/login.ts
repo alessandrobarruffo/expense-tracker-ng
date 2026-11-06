@@ -1,14 +1,10 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
-import { LoginPayload } from '../model/login-model';
-import { AuthenticationService } from '../services/authentication.service';
-import { catchError, EMPTY, tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 import { Button } from '@openng/optimus-ui/button';
 import { InputTextModule } from '@openng/optimus-ui/inputtext';
 import { MessageModule } from '@openng/optimus-ui/message';
-import { ErrorResponse } from '../model/error-model';
+import { AuthPayload } from '../core/auth/auth.models';
+import { authStore } from '../core/auth/auth.store';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +13,7 @@ import { ErrorResponse } from '../model/error-model';
   styleUrl: './login.scss',
 })
 export class Login {
-  loginModel = signal<LoginPayload>({
+  loginModel = signal<AuthPayload>({
     username: '',
     password: '',
   });
@@ -25,50 +21,16 @@ export class Login {
     required(schemaPath.username);
     required(schemaPath.password);
   });
-  error = signal<ErrorResponse | null>(null);
-
-  destroyRef = inject(DestroyRef);
-  private router = inject(Router);
-  private loginService = inject(AuthenticationService);
+  authStore = inject(authStore);
+  error = this.authStore.error;
 
   constructor() {}
 
   register() {
-    this.error.set(null);
-    this.loginService
-      .register(this.loginForm().value())
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap(() => {
-          if (this.loginService.isLoggedIn()) {
-            this.router.navigate(['/home/expenses']);
-          }
-        }),
-        catchError((error: ErrorResponse) => {
-          console.error(error);
-          this.error.set(error);
-          return EMPTY;
-        }),
-      )
-      .subscribe();
+    this.authStore.register(this.loginForm().value());
   }
 
   login() {
-    this.error.set(null);
-    this.loginService
-      .login(this.loginForm().value())
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap(() => {
-          if (this.loginService.isLoggedIn()) {
-            this.router.navigate(['/home']);
-          }
-        }),
-        catchError((error: ErrorResponse) => {
-          this.error.set(error);
-          return EMPTY;
-        }),
-      )
-      .subscribe();
+    this.authStore.login(this.loginForm().value());
   }
 }

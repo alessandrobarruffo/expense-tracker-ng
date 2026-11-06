@@ -5,29 +5,22 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { provideOptimus } from '@openng/optimus-ui/config';
 import Material from '@openng/optimus-ui-themes/material';
-import { AuthenticationService } from './services/authentication.service';
-import { catchError, EMPTY } from 'rxjs';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { refreshTokenInterceptor } from './interceptors/refresh-token.interceptor';
 import { errorInterceptor } from './interceptors';
+import { authInterceptor } from './core/auth/auth.interceptor';
+import { authStore } from './core/auth/auth.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAppInitializer(() => {
-      const authenticationService = inject(AuthenticationService);
-      return authenticationService.refresh().pipe(
-        catchError(() => {
-          return EMPTY;
-        }),
-      );
+      return inject(authStore).refresh();
     }),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideOptimus({ theme: { preset: Material } }),
-    provideHttpClient(withInterceptors([refreshTokenInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
   ],
 };

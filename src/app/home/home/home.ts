@@ -1,11 +1,11 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { Button } from '@openng/optimus-ui/button';
-import { AuthenticationService } from '../../services/authentication.service';
-import { ApiService } from '../../services/api-service';
-import { catchError, EMPTY, take, tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { Expense } from '../../model/expense-model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import { ExpensesApi } from '../../core/features/expenses/expenses.api';
+import { authStore } from '../../core/auth/auth.store';
 
 @Component({
   selector: 'app-home',
@@ -16,10 +16,9 @@ import { Router, RouterOutlet } from '@angular/router';
 export class Home {
   expenses = signal<Expense[]>([]);
 
-  private loginService = inject(AuthenticationService);
-  private apiService = inject(ApiService);
+  authenticationStore = inject(authStore);
+  private apiService = inject(ExpensesApi);
   private destroyRef = inject(DestroyRef);
-  private router = inject(Router);
 
   constructor() {
     this.getExpenses();
@@ -39,17 +38,6 @@ export class Home {
   }
 
   logout() {
-    this.loginService
-      .logout()
-      .pipe(
-        tap(() => {
-          this.router.navigate(['login']);
-        }),
-        catchError(() => {
-          //this.router.navigate(['/login']);
-          return EMPTY;
-        }),
-      )
-      .subscribe();
+    this.authenticationStore.logout();
   }
 }
