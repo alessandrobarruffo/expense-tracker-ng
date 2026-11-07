@@ -71,11 +71,9 @@ export const authStore = signalStore(
       logout: rxMethod<void>(
         switchMap(() =>
           authApi.logout().pipe(
-            tap(() => {
-             void router.navigate(['login']);
-            }),
             finalize(() => {
               patchState(store, initialState);
+              void router.navigate(['login']);
             }),
           ),
         ),
