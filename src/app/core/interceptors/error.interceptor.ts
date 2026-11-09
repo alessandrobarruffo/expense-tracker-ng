@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
-import { ErrorResponse } from '../model/error-model';
+import { ErrorResponse } from '../model/error.model';
 
 const noToastRoutes = ['/api/user/register', '/api/user/login'];
 

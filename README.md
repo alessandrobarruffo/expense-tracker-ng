@@ -37,7 +37,7 @@ src/app/
 
 A feature is a cohesive set of code that **owns something of its own** (state, data, backend calls, pages or routes) and that changes together.
 
-Rule of thumb: *"Whose data or pages does this code work with?"* If the answer is a named owner, that owner is the feature and the code goes in `features/<name>/`. If the answer is "nobody", it goes in `core/`.
+Rule of thumb: _"Whose data or pages does this code work with?"_ If the answer is a named owner, that owner is the feature and the code goes in `features/<name>/`. If the answer is "nobody", it goes in `core/`.
 
 What does **not** matter for this decision:
 
@@ -45,13 +45,13 @@ What does **not** matter for this decision:
 - **Being global.** Globality is decided by how the code is provided (`providedIn: 'root'` or `providers` on a route), not by the folder it lives in.
 - **Having a UI.** The layout has a UI but owns nothing, so it is not a feature.
 
-| Code | Owns something? | Location |
-|---|---|---|
-| Auth store, API, login pages | user, token, pages | `features/auth/` |
-| `auth.interceptor` | uses the auth store | `features/auth/` |
-| Generic error interceptor | nothing | `core/interceptors/` |
-| Layout with navbar and outlet | nothing | `core/layout/` |
-| Static "About" page | page and route | `features/about/` |
+| Code                          | Owns something?     | Location             |
+| ----------------------------- | ------------------- | -------------------- |
+| Auth store, API, login pages  | user, token, pages  | `features/auth/`     |
+| `auth.interceptor`            | uses the auth store | `features/auth/`     |
+| Generic error interceptor     | nothing             | `core/interceptors/` |
+| Layout with navbar and outlet | nothing             | `core/layout/`       |
+| Static "About" page           | page and route      | `features/about/`    |
 
 A layout with its own state (theme, notifications) can become a feature of its own. This is a grey area, and moving it later is cheap.
 
@@ -77,7 +77,30 @@ Pure data transformations (mappers, formatting, validation) live in plain functi
 
 - Request and response types are kept separate when they differ (for example `LoginRequest` and `AuthUser`), instead of one type with optional fields such as `password?`.
 - `interface` / `type` are used for data models.
-- Model properties use camelCase, matching the JSON exchanged with the backend, so no conversion layer is needed. If the backend ever sends a different naming style (for example snake_case), a mapper in the `*.api.ts` file converts it at the boundary, so the rest of the frontend only sees camelCase.
+- The backend uses snake_case in its JSON, while the frontend uses camelCase. For this reason every feature has two kinds of types:
+  - **DTO** (`UserDto`): mirrors the backend JSON exactly, with snake_case properties.
+  - **Model** (`User`): used by stores, pages and components, with camelCase properties.
+- The conversion between the two happens in one place only, a mapper in the feature's `*.api.ts` file, at the boundary with the backend. The rest of the frontend never sees snake_case.
+- The mapper is also where other type conversions happen, for example date strings into `Date` objects.
+
+```ts
+// users.models.ts
+export interface UserDto {
+  username: string;
+  created_at: string;
+}
+
+export interface User {
+  username: string;
+  createdAt: Date;
+}
+
+// users.api.ts
+const toUser = (dto: UserDto): User => ({
+  username: dto.username,
+  createdAt: new Date(dto.created_at),
+});
+```
 
 ## 6. Authentication
 

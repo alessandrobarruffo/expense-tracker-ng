@@ -10,7 +10,6 @@ import { AuthStore } from '../../features/auth/auth.store';
   templateUrl: './main-layout.html',
 })
 export class MainLayout {
-
   authStore = inject(AuthStore);
 
   logout() {

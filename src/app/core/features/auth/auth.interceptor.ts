@@ -5,11 +5,15 @@ import { Router } from '@angular/router';
 import { AuthApi } from './auth.api';
 import { AuthStore } from './auth.store';
 
+const notAuthenticatedRoutes = ['register', 'login'];
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authStore = inject(AuthStore);
   const apiService = inject(AuthApi);
   const router = inject(Router);
-  return next(req).pipe(
+  const shouldAddAuthHeader = authStore.isLoggedIn() && notAuthenticatedRoutes.every((notAuthenticatedRoute) => !req.url.includes(notAuthenticatedRoute));
+  return next(shouldAddAuthHeader ? req.clone({
+    headers: req.headers.set('Authorization', 'Bearer ' + authStore.accessToken()),
+  }) : req).pipe(
     catchError((errorResponse) => {
       if (
         errorResponse.status === 401 &&

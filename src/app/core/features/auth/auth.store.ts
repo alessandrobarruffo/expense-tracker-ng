@@ -5,7 +5,7 @@ import { catchError, EMPTY, finalize, Observable, pipe, switchMap, tap } from 'r
 import { AuthApi } from './auth.api';
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ErrorResponse } from '../../model/error-model';
+import { ErrorResponse } from '../../model/error.model';
 import { HttpResponse } from '@angular/common/http';
 
 type AuthState = {
@@ -17,7 +17,7 @@ type AuthState = {
 const initialState: AuthState = {
   user: null,
   accessToken: null,
-  error: null
+  error: null,
 };
 
 export const AuthStore = signalStore(
@@ -34,7 +34,7 @@ export const AuthStore = signalStore(
         pipe(
           tap(() => patchState(store, { error: null })),
           switchMap((payload) => {
-            const {returnUrl, ...apiPayload} = payload;
+            const { returnUrl, ...apiPayload } = payload;
             return request(apiPayload).pipe(
               tap((res) => {
                 patchState(store, {
@@ -48,12 +48,11 @@ export const AuthStore = signalStore(
                 return EMPTY;
               }),
             );
-          }
-          ),
+          }),
         ),
       );
     return {
-      login: createSessionMethod((payload: LoginRequestDto) => authApi.login(payload),),
+      login: createSessionMethod((payload: LoginRequestDto) => authApi.login(payload)),
       register: createSessionMethod((payload: LoginRequestDto) =>
         authApi.register(payload).pipe(switchMap(() => authApi.login(payload))),
       ),

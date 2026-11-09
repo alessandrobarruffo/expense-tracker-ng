@@ -4,7 +4,7 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ErrorResponse } from '../../../../model/error-model';
+import { ErrorResponse } from '../../../../model/error.model';
 import { LoginRequestDto } from '../../auth.models';
 
 const MOCK_FILLED_PAYLOAD: LoginRequestDto = {
