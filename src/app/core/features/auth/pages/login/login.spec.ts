@@ -4,15 +4,15 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ErrorResponse } from '../model/error-model';
-import { AuthPayload } from '../core/auth/auth.models';
+import { ErrorResponse } from '../../../../model/error-model';
+import { LoginRequestDto } from '../../auth.models';
 
-const MOCK_FILLED_PAYLOAD: AuthPayload = {
+const MOCK_FILLED_PAYLOAD: LoginRequestDto = {
   username: 'user',
   password: 'password',
 };
 
-const MOCK_EMPTY_PAYLOAD: AuthPayload = {
+const MOCK_EMPTY_PAYLOAD: LoginRequestDto = {
   username: '',
   password: '',
 };

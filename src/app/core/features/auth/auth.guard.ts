@@ -1,9 +1,9 @@
 import { CanActivateFn, RedirectCommand, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { authStore } from './auth.store';
+import { AuthStore } from './auth.store';
 
 export const isLogged: CanActivateFn = () => {
-  const isAuthenticated = inject(authStore).isLoggedIn();
+  const isAuthenticated = inject(AuthStore).isLoggedIn();
   if (isAuthenticated) {
     return true;
   }

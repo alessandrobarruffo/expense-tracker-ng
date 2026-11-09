@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Expense } from '../../../model/expense-model';
-import { Page } from '../../../model/page-model';
-import { authStore } from '../../auth/auth.store';
+import { Expense } from './expenses.model';
+import { Page } from '../../model/page-model';
+import { AuthStore } from '../auth/auth.store';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class ExpensesApi {
   expenseUrl = '/api/expense';
 
   private http = inject(HttpClient);
-  private authenticationSate = inject(authStore);
+  private authenticationSate = inject(AuthStore);
 
   getExpenses(): Observable<Page<Expense>> {
     return this.http.get<Page<Expense>>(this.expenseUrl, {

@@ -9,14 +9,14 @@ import { routes } from './app.routes';
 import { provideOptimus } from '@openng/optimus-ui/config';
 import Material from '@openng/optimus-ui-themes/material';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { errorInterceptor } from './interceptors';
-import { authInterceptor } from './core/auth/auth.interceptor';
-import { authStore } from './core/auth/auth.store';
+import { errorInterceptor } from './core/interceptors';
+import { authInterceptor } from './core/features/auth/auth.interceptor';
+import { AuthStore } from './core/features/auth/auth.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAppInitializer(() => {
-      return inject(authStore).refresh();
+      return inject(AuthStore).refresh();
     }),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),

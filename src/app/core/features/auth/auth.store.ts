@@ -1,4 +1,4 @@
-import { AuthPayload, User } from './auth.models';
+import { LoginRequestDto, AuthStoreLoginPayload, User } from './auth.models';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, finalize, Observable, pipe, switchMap, tap } from 'rxjs';
@@ -20,7 +20,7 @@ const initialState: AuthState = {
   error: null
 };
 
-export const authStore = signalStore(
+export const AuthStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withComputed(({ accessToken }) => ({
@@ -28,31 +28,33 @@ export const authStore = signalStore(
   })),
   withMethods((store, authApi = inject(AuthApi), router = inject(Router)) => {
     const createSessionMethod = (
-      request: (payload: AuthPayload) => Observable<HttpResponse<User>>,
+      request: (payload: LoginRequestDto) => Observable<HttpResponse<User>>,
     ) =>
-      rxMethod<AuthPayload>(
+      rxMethod<AuthStoreLoginPayload>(
         pipe(
           tap(() => patchState(store, { error: null })),
-          switchMap((payload) =>
-            request(payload).pipe(
+          switchMap((payload) => {
+            const {returnUrl, ...apiPayload} = payload;
+            return request(apiPayload).pipe(
               tap((res) => {
                 patchState(store, {
                   user: res.body,
                   accessToken: res.headers.get('Authorization'),
                 });
-                void router.navigate(['/home']);
+                void router.navigateByUrl(returnUrl ?? 'home');
               }),
               catchError((error: ErrorResponse) => {
                 patchState(store, { error });
                 return EMPTY;
               }),
-            ),
+            );
+          }
           ),
         ),
       );
     return {
-      login: createSessionMethod((payload) => authApi.login(payload)),
-      register: createSessionMethod((payload: AuthPayload) =>
+      login: createSessionMethod((payload: LoginRequestDto) => authApi.login(payload),),
+      register: createSessionMethod((payload: LoginRequestDto) =>
         authApi.register(payload).pipe(switchMap(() => authApi.login(payload))),
       ),
       refresh: () => {

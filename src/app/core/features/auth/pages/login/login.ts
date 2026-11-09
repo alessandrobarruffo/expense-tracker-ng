@@ -3,8 +3,8 @@ import { form, FormField, required } from '@angular/forms/signals';
 import { Button } from '@openng/optimus-ui/button';
 import { InputTextModule } from '@openng/optimus-ui/inputtext';
 import { MessageModule } from '@openng/optimus-ui/message';
-import { AuthPayload } from '../core/auth/auth.models';
-import { authStore } from '../core/auth/auth.store';
+import { LoginRequestDto } from '../../auth.models';
+import { AuthStore } from '../../auth.store';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +13,7 @@ import { authStore } from '../core/auth/auth.store';
   styleUrl: './login.scss',
 })
 export class Login {
-  loginModel = signal<AuthPayload>({
+  loginModel = signal<LoginRequestDto>({
     username: '',
     password: '',
   });
@@ -21,7 +21,7 @@ export class Login {
     required(schemaPath.username);
     required(schemaPath.password);
   });
-  authStore = inject(authStore);
+  authStore = inject(AuthStore);
   error = this.authStore.error;
 
   constructor() {}

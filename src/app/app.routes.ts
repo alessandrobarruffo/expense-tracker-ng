@@ -1,21 +1,21 @@
 import { Routes } from '@angular/router';
-import { Login } from './login/login';
-import { Home } from './home/home/home';
-import { isLogged } from './core/auth/auth.guard';
-import { Expenses } from './home/home/expenses/expenses';
+import { Login } from './core/features/auth/pages/login/login';
+import { isLogged } from './core/features/auth/auth.guard';
+import { MainLayout } from './core/layout/main-layout/main-layout';
+import { ExpensesListPage } from './core/features/expenses/pages/expenses-list.page/expenses-list.page';
 
 export const routes: Routes = [
   {
-    path: 'expenses',
-    component: Home,
+    path: '',
+    component: MainLayout,
     canActivate: [isLogged],
     children: [
       {
         path: '',
-        component: Expenses,
+        component: ExpensesListPage,
       },
     ],
   },
   { path: 'login', component: Login },
-  { path: '**', redirectTo: 'expenses' },
+  { path: '**', redirectTo: '' },
 ];

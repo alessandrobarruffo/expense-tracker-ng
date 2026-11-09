@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { AuthPayload, User } from './auth.models';
+import { LoginRequestDto, User } from './auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +14,11 @@ export class AuthApi {
 
   private http = inject(HttpClient);
 
-  register(payload: AuthPayload) {
+  register(payload: LoginRequestDto) {
     return this.http.post<void>(this.registerUrl, payload, { withCredentials: true });
   }
 
-  login(payload: AuthPayload) {
+  login(payload: LoginRequestDto) {
     return this.http.post<User>(this.loginUrl, payload, { observe: 'response' });
   }
 
