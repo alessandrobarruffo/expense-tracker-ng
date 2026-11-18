@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://app-expensetracker--0000001.ambitiousmushroom-6077c4fb.italynorth.azurecontainerapps.io",
+    "target": "https://app-expensetracker.ambitiousmushroom-6077c4fb.italynorth.azurecontainerapps.io",
     "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
