@@ -22,7 +22,7 @@ FROM nginx:alpine
 RUN rm -rf /etc/nginx/conf.d/*
 
 # Copia la configurazione personalizzata
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 # Copia l'output della build Angular nella cartella statica di Nginx
 COPY --from=build /app/dist/expense-tracker-ng/browser /usr/share/nginx/html
