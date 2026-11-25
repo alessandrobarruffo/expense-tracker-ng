@@ -44,3 +44,10 @@ jobs:
           tags: |
             ${{ secrets.ACR_LOGIN_SERVER }}/expense-tracker-ng:dev
             ${{ secrets.ACR_LOGIN_SERVER }}/expense-tracker-ng:dev-${{ github.sha }}
+
+      - name: Deploy to Container App
+        run: |
+          az containerapp update \
+            --name app-expensetracker-ng-dev \
+            --resource-group app-rg-expensetracker \
+            --image ${{ secrets.ACR_LOGIN_SERVER }}/expense-tracker-ng:dev-${{ github.sha }}
