@@ -17,7 +17,7 @@ const MOCK_EMPTY_PAYLOAD: LoginRequestDto = {
   password: '',
 };
 
-describe.only('Login', () => {
+describe('Login', () => {
   let component: Login;
   let fixture: ComponentFixture<Login>;
   let debugElement: DebugElement;
