@@ -15,16 +15,14 @@ export class ExpensesApi {
   private authenticationSate = inject(AuthStore);
 
   getExpenses(): Observable<Page<Expense>> {
-    return this.http
-      .get<PageDto<ExpenseDto>>(this.expenseUrl)
-      .pipe(
-        map((p) =>
-          toPage({
-            ...p,
-            content: p.content.map((expenseDto: ExpenseDto) => toExpense(expenseDto)),
-          }),
-        ),
-      );
+    return this.http.get<PageDto<ExpenseDto>>(this.expenseUrl).pipe(
+      map((p) =>
+        toPage({
+          ...p,
+          content: p.content.map((expenseDto: ExpenseDto) => toExpense(expenseDto)),
+        }),
+      ),
+    );
   }
 }
 

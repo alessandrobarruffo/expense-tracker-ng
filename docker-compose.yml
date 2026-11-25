@@ -5,6 +5,5 @@ services:
       dockerfile: Dockerfile
     container_name: expense-tracker-frontend
     ports:
-      - "80:80" # Puoi cambiarlo in "4200:80" se la porta 80 è già occupata
+      - '80:80' # Puoi cambiarlo in "4200:80" se la porta 80 è già occupata
     restart: unless-stopped
-

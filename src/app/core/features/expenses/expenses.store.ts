@@ -10,36 +10,41 @@ type ExpensesStore = {
   loading: boolean;
   page: number;
   total: number;
-}
+};
 
-const expensesState : ExpensesStore = {
+const expensesState: ExpensesStore = {
   expenses: [],
   loading: false,
   page: 0,
   total: 0,
-}
-
+};
 
 export const ExpensesStore = signalStore(
   withState(expensesState),
-  withMethods((store, expensesApi = inject(ExpensesApi) ) => ({
+  withMethods((store, expensesApi = inject(ExpensesApi)) => ({
     getExpenses: rxMethod<void>(
       pipe(
         tap(() => {
-          patchState(store, {loading: true})
+          patchState(store, { loading: true });
         }),
-        switchMap(() => expensesApi.getExpenses().pipe(
-          tap(expensesPage => {
-            patchState(store, {expenses: expensesPage.content, total: expensesPage.totalCount, loading: false});
-          }),
-          catchError(() => {
-            patchState(store, {
-              loading: false
-            })
-            return EMPTY;
-          })
-        )),
-      ))
-
-  }))
-)
+        switchMap(() =>
+          expensesApi.getExpenses().pipe(
+            tap((expensesPage) => {
+              patchState(store, {
+                expenses: expensesPage.content,
+                total: expensesPage.totalCount,
+                loading: false,
+              });
+            }),
+            catchError(() => {
+              patchState(store, {
+                loading: false,
+              });
+              return EMPTY;
+            }),
+          ),
+        ),
+      ),
+    ),
+  })),
+);
